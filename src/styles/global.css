@@ -156,3 +156,14 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+/* Shared portfolio palette and accessible interaction styles. */
+:root { --accent: #3d6248; --accent-dark: #294632; --black: 37, 43, 36; --gray: 103, 111, 99; --gray-light: 218, 222, 211; --gray-dark: 83, 91, 80; }
+* { box-sizing: border-box; }
+body { background: #f8f7f2; font-family: Atkinson, sans-serif; font-size: 18px; }
+main { max-width: calc(100% - 3rem); padding-inline: 0; }
+a:hover { color: var(--accent-dark); }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; border-radius: 2px; }
+.eyebrow { font: .7rem/1.6 Atkinson, sans-serif; text-transform: uppercase; letter-spacing: .13em; color: var(--accent); }
+.eyebrow span { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: .5rem; }
+@media(prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
