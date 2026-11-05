@@ -1,40 +1,60 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { sitePath } from '../utils/paths';
 ---
-
 <!doctype html>
 <html lang="en">
-	</head>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	<body>
-		<Header />
-		<main id="main-content">
-			<h1>👋 Hi!, I am Jun Hong!</h1>
-			<p>
-				Welcome to my personal website! feel free to browse around this space. it is filled with the things that i am passionate about and 
-				currently interested in! 
-			</p>
-			<p>
-				things i am currently working on:
-				<ul>
-					<li> <a href="https://docs.astro.build/">read the docs</a> 
-					<li> <a href="https://docs.astro.build/">read the docs</a> 
-					<li> <a href="https://docs.astro.build/">read the docs</a>
-				</ul>
-
-			</p>
-			
-			<p>
-				Have fun reading! If you want to discuss / chat with me, you can email me at <code> lewischua.junhong@gmail.com</code> .
-			</p>
-		</main>
-		<Footer />
-	</body>
+<head><BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} /></head>
+<body>
+<Header />
+<main id="main-content">
+  <section class="hero" aria-labelledby="intro">
+    <div class="intro">
+      <p class="eyebrow"><span></span> A personal corner of the internet</p>
+      <h1 id="intro">Hello, I’m<br /><em>Jun Hong.</em></h1>
+      <p class="lede">A curious mind.<br />A space for things in progress.</p>
+      <p class="summary">Welcome to my little corner of the web. This is where I share what I’m working on, what interests me, and what I learn along the way.</p>
+      <div class="actions"><a class="button" href={sitePath('about/')}>A little about me <span aria-hidden="true">↗</span></a><a href="mailto:lewischua.junhong@gmail.com">Let’s talk <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <aside class="notebook" aria-label="A note about this space">
+      <div class="note-top"><span>FIELD NOTES</span><span>01 / ONGOING</span></div>
+      <div class="orbit" aria-hidden="true"><span>j.h.</span></div>
+      <p>Always a<br /><em>work in progress.</em></p>
+      <div class="note-bottom"><span>Learning. Making. Exploring.</span><span aria-hidden="true">↗</span></div>
+    </aside>
+  </section>
+  <section class="explore" aria-labelledby="explore-heading">
+    <div class="section-heading"><p class="eyebrow">Take a look around</p><h2 id="explore-heading">A few places to start.</h2></div>
+    <div class="cards">
+      <a class="card" href="https://github.com/leclerc162003"><span class="card-number">01 / MAKING</span><h3>Code & experiments <span aria-hidden="true">↗</span></h3><p>Find my repositories and follow what I’m building on GitHub.</p><span class="card-label">Explore GitHub</span></a>
+      <a class="card" href={sitePath('blog/')}><span class="card-number">02 / WRITING</span><h3>The notebook <span aria-hidden="true">↗</span></h3><p>A growing space for notes, ideas, and things worth remembering.</p><span class="card-label">Browse the notebook</span></a>
+      <a class="card" href={sitePath('about/')}><span class="card-number">03 / CONNECTING</span><h3>Behind the page <span aria-hidden="true">↗</span></h3><p>Get to know the person behind this space, or drop me a message.</p><span class="card-label">Meet Jun Hong</span></a>
+    </div>
+  </section>
+  <section class="contact"><p class="eyebrow">Good conversations start somewhere</p><h2>Have something in mind?</h2><a href="mailto:lewischua.junhong@gmail.com">Say hello <span aria-hidden="true">↗</span></a></section>
+</main>
+<Footer />
+</body>
 </html>
+<style>
+main { width: 1100px; padding-top: 3rem; }
+.hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; padding: 2rem 0 6rem; }
+h1 { font-size: clamp(3.8rem, 7vw, 6.4rem); letter-spacing: -.065em; line-height: 1.02; margin: 1.8rem 0; }
+h1 em { color: var(--accent); font-weight: normal; font-family: Georgia, serif; }
+.lede { font-size: 1.45rem; line-height: 1.4; color: rgb(var(--black)); }
+.summary { max-width: 460px; font-size: 1rem; }
+.actions { display: flex; gap: 1.8rem; align-items: center; margin-top: 2rem; font-size: .9rem; }
+.actions a { text-decoration: none; } .button { background: rgb(var(--black)); color: white; padding: .9rem 1.2rem; border-radius: 4px; } .button:hover { color: white; background: var(--accent); }
+.notebook { background: #e9eddf; border: 1px solid #d0d6c6; padding: 1.6rem; transform: rotate(3deg); border-radius: 3px; box-shadow: 10px 14px 0 #e8e5db; color: #314735; }
+.note-top, .note-bottom { display: flex; justify-content: space-between; font: .65rem monospace; letter-spacing: .06em; }
+.orbit { height: 200px; display: grid; place-items: center; background: repeating-radial-gradient(ellipse at center, transparent 0 17px, #b8c4ad 18px 19px, transparent 20px 32px); margin: 2rem 0; border-radius: 50%; }
+.orbit span { background: #e9eddf; padding: .8rem; font: italic 3rem Georgia, serif; }
+.notebook p { font: 2.25rem/1.2 Georgia, serif; letter-spacing: -.03em; }.note-bottom { border-top: 1px solid #b8c4ad; padding-top: 1rem; }
+.explore { border-top: 1px solid rgb(var(--gray-light)); padding: 3rem 0; }.section-heading { margin-bottom: 2rem; }h2 { font-size: 2rem; letter-spacing: -.035em; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }.card { display: flex; flex-direction: column; padding: 1.6rem; border: 1px solid rgb(var(--gray-light)); border-radius: 6px; text-decoration: none; color: inherit; transition: background .2s; }.card:hover { background: #e9eddf; color: inherit; }.card-number { font: .65rem monospace; letter-spacing: .08em; }.card h3 { font-size: 1.25rem; margin-top: 2.5rem; display: flex; justify-content: space-between; gap: .6rem; }.card p { font-size: .9rem; }.card-label { margin-top: auto; font-size: .8rem; color: var(--accent); }
+.contact { text-align: center; padding: 4rem 0; }.contact > a { display: inline-block; margin-top: 1rem; }
+@media(max-width: 760px) { .hero { grid-template-columns: 1fr; gap: 3rem; padding-bottom: 4rem; }.notebook { max-width: 380px; width: calc(100% - 3rem); margin: auto; }.cards { grid-template-columns: 1fr; }.card h3 { margin-top: 1.5rem; }main { padding-top: 1rem; }.actions { gap: 1rem; } }
+</style>
