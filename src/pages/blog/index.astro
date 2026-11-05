@@ -6,113 +6,85 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
-
 <!doctype html>
 <html lang="en">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main id="main-content">
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={sitePath(`blog/${post.id}/`)}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head><BaseHead title={`The notebook | ${SITE_TITLE}`} description="Notes, ideas, and small discoveries from Jun Hong’s corner of the internet." /></head>
+  <body>
+    <Header />
+    <main id="main-content">
+      <section aria-labelledby="notebook-title">
+        <div class="notebook-intro">
+          <div><p class="eyebrow">Collected along the way / {String(posts.length).padStart(2, '0')} entries</p><h1 id="notebook-title">The notebook<span aria-hidden="true">✳</span></h1><p>Small discoveries. Wandering thoughts. Things worth keeping.</p></div>
+          <a class="rss" href={sitePath('rss.xml')}>Follow via RSS ↗</a>
+        </div>
+        <div class="search-tools" hidden>
+          <label for="note-search">Find a thought</label>
+          <input id="note-search" type="search" placeholder="Search titles and descriptions…" aria-controls="notes" />
+          <p id="result-count" role="status" aria-live="polite">{posts.length} notes to explore</p>
+        </div>
+        <ul id="notes">
+          {posts.map((post, index) => (
+            <li data-search={`${post.data.title} ${post.data.description}`.toLowerCase()}>
+              <a class="postcard" href={sitePath(`blog/${post.id}/`)}>
+                <div class="postmark"><span>NOTE / {String(index + 1).padStart(2, '0')}</span><FormattedDate date={post.data.pubDate} /></div>
+                {post.data.heroImage && <Image width={720} height={360} src={post.data.heroImage} alt="" />}
+                <div class="card-copy"><h2>{post.data.title}</h2><p>{post.data.description}</p><span class="read">Open this note <span aria-hidden="true">↗</span></span></div>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p id="empty-state" hidden>No notes found. Try another word or clear your search to keep exploring.</p>
+      </section>
+    </main>
+    <Footer />
+  </body>
 </html>
+<script>
+  const search = document.querySelector<HTMLInputElement>('#note-search');
+  const notes = [...document.querySelectorAll<HTMLElement>('#notes > li')];
+  const count = document.querySelector<HTMLElement>('#result-count');
+  const empty = document.querySelector<HTMLElement>('#empty-state');
+  const tools = document.querySelector<HTMLElement>('.search-tools');
+  if (search && count && empty && tools) {
+    tools.hidden = false;
+    search.addEventListener('input', () => {
+      const query = search.value.trim().toLowerCase();
+      notes.forEach((note) => { note.hidden = !note.dataset.search?.includes(query); });
+      const visible = notes.filter((note) => !note.hidden).length;
+      count.textContent = `${visible} ${visible === 1 ? 'note' : 'notes'} to explore`;
+      empty.hidden = visible > 0;
+    });
+  }
+</script>
+<style>
+  main { width: 1100px; padding-block: 3rem 5rem; }
+  .notebook-intro { display: flex; justify-content: space-between; align-items: center; gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgb(var(--gray-light)); }
+  h1 { font-size: clamp(2.8rem, 6vw, 4.8rem); letter-spacing: -.06em; }
+  h1 span { display: inline-block; font-size: .7em; color: var(--accent); margin-left: .5rem; transform: rotate(12deg); }
+  .notebook-intro p { margin-bottom: 0; }.notebook-intro .eyebrow { margin-bottom: 1rem; }
+  .rss { flex-shrink: 0; border: 1px dashed var(--accent); padding: .7rem 1rem; border-radius: 50%; font-size: .8rem; text-decoration: none; transform: rotate(-8deg); }
+  .search-tools { margin-block: 2rem; display: flex; align-items: center; flex-wrap: wrap; gap: .8rem; }
+  [hidden] { display: none !important; }
+  label { font-size: .85rem; font-weight: bold; }
+  input { font: inherit; font-size: .9rem; border: 1px solid #939d8f; background: #fffdf8; border-radius: 3px; padding: .7rem 1rem; width: min(100%, 360px); }
+  input:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  #result-count { font-size: .8rem; margin: 0 0 0 auto; }
+  ul { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.8rem; }
+  li { min-width: 0; }
+  .postcard { display: flex; flex-direction: column; height: 100%; background: #fffdf8; border: 1px solid #cbd1c2; border-radius: 3px; color: inherit; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+  li:nth-child(3n + 2) .postcard { background: #edf0e6; }li:nth-child(3n) .postcard { background: #f6eadd; }
+  .postcard:hover { transform: translateY(-5px) rotate(-1deg); box-shadow: 5px 6px 0 #d5dccb; color: inherit; }
+  .postmark { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; padding: 1rem 1.2rem; font: .65rem/1.5 monospace; letter-spacing: .05em; border-bottom: 1px dashed #cbd1c2; }
+  img { width: 100%; aspect-ratio: 2; object-fit: cover; border-radius: 0; }
+  .card-copy { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+  h2 { font-size: 1.6rem; letter-spacing: -.03em; }.card-copy p { font-size: .95rem; margin-top: .5rem; }
+  .read { margin-top: auto; padding-top: 1rem; font-size: .8rem; color: var(--accent); display: flex; justify-content: space-between; }
+  #empty-state { padding: 3rem 1rem; border: 1px dashed #939d8f; text-align: center; }
+  @media(max-width: 640px) { ul { grid-template-columns: 1fr; }.notebook-intro { align-items: flex-start; flex-direction: column; gap: 1.5rem; }#result-count { width: 100%; margin-left: 0; }main { padding-top: 1.5rem; } }
+</style>
