@@ -13,7 +13,7 @@ import { sitePath } from '../utils/paths';
 <main id="main-content">
   <section class="hero" aria-labelledby="intro">
     <div class="intro">
-      <p class="eyebrow"><span></span> A personal corner of the internet</p>
+      <p class="eyebrow"><span></span> Independent mind. Perpetual explorer.</p>
       <h1 id="intro">Hello, I’m<br /><em>Jun Hong.</em></h1>
       <p class="lede">A curious mind.<br />A space for things in progress.</p>
       <p class="summary">Welcome to my little corner of the web. This is where I share what I’m working on, what interests me, and what I learn along the way.</p>
@@ -21,10 +21,19 @@ import { sitePath } from '../utils/paths';
     </div>
     <aside class="notebook" aria-label="A note about this space">
       <div class="note-top"><span>FIELD NOTES</span><span>01 / ONGOING</span></div>
-      <div class="orbit" aria-hidden="true"><span>j.h.</span></div>
+      <div class="orbit" aria-hidden="true"><span>j.h.<small>stay curious ✳</small></span></div>
+      <span class="sticker" aria-hidden="true">MADE OF<br />CURIOSITY ↗</span>
       <p>Always a<br /><em>work in progress.</em></p>
       <div class="note-bottom"><span>Learning. Making. Exploring.</span><span aria-hidden="true">↗</span></div>
     </aside>
+  </section>
+  <section class="play-bar" aria-labelledby="palette-title">
+    <div><p class="eyebrow" id="palette-title">A little room to play</p><p>Same curious mind. Pick a different mood.</p></div>
+    <div class="palette" role="group" aria-label="Homepage color mood">
+      <button type="button" data-mood="garden" aria-pressed="true"><span class="swatch garden" aria-hidden="true"></span>Garden</button>
+      <button type="button" data-mood="sunset" aria-pressed="false"><span class="swatch sunset" aria-hidden="true"></span>Sunset</button>
+      <button type="button" data-mood="ink" aria-pressed="false"><span class="swatch ink" aria-hidden="true"></span>Ink</button>
+    </div>
   </section>
   <section class="explore" aria-labelledby="explore-heading">
     <div class="section-heading"><p class="eyebrow">Take a look around</p><h2 id="explore-heading">A few places to start.</h2></div>
@@ -39,7 +48,29 @@ import { sitePath } from '../utils/paths';
 <Footer />
 </body>
 </html>
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-mood]');
+  buttons.forEach((button) => button.addEventListener('click', () => {
+    document.body.dataset.mood = button.dataset.mood;
+    buttons.forEach((choice) => choice.setAttribute('aria-pressed', String(choice === button)));
+  }));
+</script>
 <style>
+:global(body) { --paper: #e9eddf; --line: #b8c4ad; --ink: #314735; --highlight: #f6cc68; }
+:global(body[data-mood="sunset"]) { --accent: #9b3e28; --accent-dark: #752b1b; --paper: #f8dfcf; --line: #d8aa8e; --ink: #793b28; --highlight: #f4cf71; }
+:global(body[data-mood="ink"]) { --accent: #49449b; --accent-dark: #302b77; --paper: #e5e1f3; --line: #b6acd1; --ink: #42366e; --highlight: #c9e4a2; }
+.notebook { position: relative; }
+.sticker { position: absolute; top: 37%; right: -1rem; background: var(--highlight); color: #343026; border: 1px solid currentColor; padding: .9rem; border-radius: 50%; font: bold .65rem/1.4 Atkinson, sans-serif; text-align: center; transform: rotate(-14deg); box-shadow: 3px 3px 0 #343026; }
+.orbit small { display: block; font: .6rem Atkinson, sans-serif; letter-spacing: .1em; text-align: center; text-transform: uppercase; }
+.play-bar { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.5rem 0 2rem; border-top: 1px dashed rgb(var(--gray-light)); }
+.play-bar p { margin: 0; font-size: .9rem; }.play-bar .eyebrow { font-size: .65rem; margin-bottom: .4rem; }
+.palette { display: flex; flex-wrap: wrap; gap: .5rem; }
+.palette button { display: inline-flex; align-items: center; gap: .45rem; padding: .65rem .8rem; font: .8rem Atkinson, sans-serif; color: rgb(var(--black)); border: 1px solid rgb(var(--gray-light)); background: transparent; border-radius: 2rem; cursor: pointer; }
+.palette button[aria-pressed="true"] { background: var(--paper); border-color: var(--accent); }
+.palette button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.swatch { width: .7rem; height: .7rem; border-radius: 50%; }.garden { background: #3d6248; }.sunset { background: #9b3e28; }.ink { background: #49449b; }
+@media(max-width: 900px) { .play-bar { align-items: flex-start; flex-direction: column; } }
+
 main { width: 1100px; padding-top: 3rem; }
 .hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: center; padding: 2rem 0 6rem; }
 h1 { font-size: clamp(3.8rem, 7vw, 6.4rem); letter-spacing: -.065em; line-height: 1.02; margin: 1.8rem 0; }
@@ -48,13 +79,13 @@ h1 em { color: var(--accent); font-weight: normal; font-family: Georgia, serif; 
 .summary { max-width: 460px; font-size: 1rem; }
 .actions { display: flex; gap: 1.8rem; align-items: center; margin-top: 2rem; font-size: .9rem; }
 .actions a { text-decoration: none; } .button { background: rgb(var(--black)); color: white; padding: .9rem 1.2rem; border-radius: 4px; } .button:hover { color: white; background: var(--accent); }
-.notebook { background: #e9eddf; border: 1px solid #d0d6c6; padding: 1.6rem; transform: rotate(3deg); border-radius: 3px; box-shadow: 10px 14px 0 #e8e5db; color: #314735; }
+.notebook { background: var(--paper); border: 1px solid #d0d6c6; padding: 1.6rem; transform: rotate(3deg); border-radius: 3px; box-shadow: 10px 14px 0 #e8e5db; color: var(--ink); }
 .note-top, .note-bottom { display: flex; justify-content: space-between; font: .65rem monospace; letter-spacing: .06em; }
-.orbit { height: 200px; display: grid; place-items: center; background: repeating-radial-gradient(ellipse at center, transparent 0 17px, #b8c4ad 18px 19px, transparent 20px 32px); margin: 2rem 0; border-radius: 50%; }
-.orbit span { background: #e9eddf; padding: .8rem; font: italic 3rem Georgia, serif; }
-.notebook p { font: 2.25rem/1.2 Georgia, serif; letter-spacing: -.03em; }.note-bottom { border-top: 1px solid #b8c4ad; padding-top: 1rem; }
+.orbit { height: 200px; display: grid; place-items: center; background: repeating-radial-gradient(ellipse at center, transparent 0 17px, var(--line) 18px 19px, transparent 20px 32px); margin: 2rem 0; border-radius: 50%; }
+.orbit span { background: var(--paper); padding: .8rem; font: italic 3rem Georgia, serif; }
+.notebook p { font: 2.25rem/1.2 Georgia, serif; letter-spacing: -.03em; }.note-bottom { border-top: 1px solid var(--line); padding-top: 1rem; }
 .explore { border-top: 1px solid rgb(var(--gray-light)); padding: 3rem 0; }.section-heading { margin-bottom: 2rem; }h2 { font-size: 2rem; letter-spacing: -.035em; }
-.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }.card { display: flex; flex-direction: column; padding: 1.6rem; border: 1px solid rgb(var(--gray-light)); border-radius: 6px; text-decoration: none; color: inherit; transition: background .2s; }.card:hover { background: #e9eddf; color: inherit; }.card-number { font: .65rem monospace; letter-spacing: .08em; }.card h3 { font-size: 1.25rem; margin-top: 2.5rem; display: flex; justify-content: space-between; gap: .6rem; }.card p { font-size: .9rem; }.card-label { margin-top: auto; font-size: .8rem; color: var(--accent); }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }.card { display: flex; flex-direction: column; padding: 1.6rem; border: 1px solid rgb(var(--gray-light)); border-radius: 6px; text-decoration: none; color: inherit; transition: background .2s, transform .2s, box-shadow .2s; }.card:hover { transform: translateY(-5px) rotate(-1deg); box-shadow: 4px 5px 0 var(--line); background: var(--paper); color: inherit; }.card-number { font: .65rem monospace; letter-spacing: .08em; }.card h3 { font-size: 1.25rem; margin-top: 2.5rem; display: flex; justify-content: space-between; gap: .6rem; }.card p { font-size: .9rem; }.card-label { margin-top: auto; font-size: .8rem; color: var(--accent); }
 .contact { text-align: center; padding: 4rem 0; }.contact > a { display: inline-block; margin-top: 1rem; }
-@media(max-width: 760px) { .hero { grid-template-columns: 1fr; gap: 3rem; padding-bottom: 4rem; }.notebook { max-width: 380px; width: calc(100% - 3rem); margin: auto; }.cards { grid-template-columns: 1fr; }.card h3 { margin-top: 1.5rem; }main { padding-top: 1rem; }.actions { gap: 1rem; } }
+@media(max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 3rem; padding-bottom: 4rem; }.notebook { max-width: 380px; width: calc(100% - 3rem); margin: auto; }.cards { grid-template-columns: 1fr; }.card h3 { margin-top: 1.5rem; }main { padding-top: 1rem; }.actions { gap: 1rem; } }
 </style>
